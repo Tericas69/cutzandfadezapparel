@@ -1,0 +1,29 @@
+{
+
+  "name": "cutz-fadez-backend",
+
+  "version": "1.0.0",
+
+  "description": "Serverless backend for Cutz & Fadez e-commerce platform",
+
+  "main": "index.js",
+
+  "scripts": {
+
+    "build": "mkdir -p ../build && zip -r ../build/backend.zip .",
+
+    "lint": "echo \"No lint step yet\"",
+
+    "test": "echo \"No tests yet\""
+
+  },
+
+  "dependencies": {
+
+    "@aws-sdk/client-dynamodb": "^3.612.0"
+
+  }
+
+}
+
+ 
