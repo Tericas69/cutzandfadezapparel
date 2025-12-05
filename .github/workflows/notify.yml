@@ -1,0 +1,58 @@
+name: Deployment Notification
+ 
+on:
+
+  workflow_run:
+
+    workflows: [ "Deploy Frontend to S3 + CloudFront" ]
+
+    types:
+
+      - completed
+ 
+jobs:
+
+  notify:
+
+    runs-on: ubuntu-latest
+ 
+    steps:
+
+      - name: Check deployment status
+
+        id: status
+
+        run: echo "STATUS=${{ github.event.workflow_run.conclusion }}" >> $GITHUB_ENV
+ 
+      - name: Print deployment result
+
+        run: echo "Deployment finished with status: $STATUS"
+ 
+      - name: Send SNS Notification
+
+        if: always()
+
+        uses: aws-actions/aws-sns-publish@v1
+
+        with:
+
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+          aws-region: us-east-1
+
+          topic-arn: arn:aws:sns:us-east-1:601234567890:cutz-fadez-deploy-alerts
+          message: |
+
+            Deployment workflow: ${{ github.event.workflow_run.name }}
+
+            Status: ${{ github.event.workflow_run.conclusion }}
+
+            Commit: ${{ github.sha }}
+
+            Actor: ${{ github.actor }}
+
+            Repo: ${{ github.repository }}
+
+ 
